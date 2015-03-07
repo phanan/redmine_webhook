@@ -23,7 +23,7 @@ class RedmineWebhook::Helper
         :action => 'updated',
         :issue => RedmineWebhook::IssueWrapper.new(journal.issue).to_hash,
         :journal => RedmineWebhook::JournalWrapper.new(journal).to_hash,
-        :html => details_to_strings(journal.visible_details),
+        :journal_html => details_to_strings(journal.visible_details),
         :url => url_for(:host => Setting.host_name, :controller => 'issues', :action => 'show', :id => journal.issue, :anchor => "change-#{journal.id}", :only_path => false)
       }
     }.to_json
