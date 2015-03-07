@@ -5,14 +5,15 @@ A Redmine plugin posts webhook on creating and updating tickets.
 
 Author
 ------------------------------
-* @suer
+* @suer (original author)
+* @phanan (rewriting and adding some features)
 
 Install
 ------------------------------
 Type below commands:
 
     $ cd $RAILS_ROOT/plugins
-    $ git clone git://github.com/suer/redmine_webhook.git
+    $ git clone git@github.com:phanan/redmine_webhook.git
     $ rake redmine:plugins:migrate RAILS_ENV=production
 
 Then, restart your redmine.
@@ -24,62 +25,73 @@ Post Data Example
 
     {
       "payload": {
+        "action": "opened",
         "issue": {
-          "author": {
-            "icon_url": "http://www.gravatar.com/avatar/example",
-            "identity_url": null,
-            "lastname": "user",
-            "firstname": "test",
-            "mail": "test@example.com",
-            "login": "test",
-            "id": 3
-          },
-          "assignee": {
-            "icon_url": "http://www.gravatar.com/avatar/example",
-            "identity_url": null,
-            "lastname": "user",
-            "firstname": "test",
-            "mail": "test@example.com",
-            "login": "test",
-            "id": 3
-          },
-          "priority": {
-            "name": "normal",
-            "id": 2
-          },
-          "tracker": {
-            "name": "bug",
-            "id": 1
-          },
-          "parent_id": null,
-          "root_id": 191,
+          "id": 1,
+          "subject": "A sample bug",
+          "description": "Lorem ipsum dolor sic amet.",
+          "created_on": "2015-03-06T04:23:42Z",
+          "updated_on": "2015-03-07T10:00:59Z",
           "closed_on": null,
-          "updated_on": "2014-03-01T15:17:48Z",
-          "created_on": "2014-03-01T15:17:48Z",
-          "description": "I'm having a problem with this.",
-          "subject": "Found a bug",
-          "id": 191,
-          "done_ratio": 0,
-          "start_date": "2014-03-02",
-          "due_date": null,
-          "estimated_hours": null,
+          "root_id": 1,
+          "parent_id": null,
+          "done_ratio": 100,
+          "start_date": "2015-03-02",
+          "due_date": "2015-03-20",
+          "estimated_hours": 15,
           "is_private": false,
-          "lock_version": 0,
+          "lock_version": 14,
           "project": {
-            "homepage": "",
-            "created_on": "2013-01-12T11:50:26Z",
-            "description": "",
-            "name": "Test Project",
-            "identifier": "test",
-            "id": 4
+            "id": 1,
+            "identifier": "playground",
+            "name": "Playground",
+            "description": "A sample playground project",
+            "created_on": "2015-03-06T02:51:48Z",
+            "homepage": ""
           },
           "status": {
-            "name": "new",
-            "id": 1
-          }
+            "id": 1,
+            "name": "New"
+          },
+          "tracker": {
+            "id": 2,
+            "name": "Feature"
+          },
+          "priority": {
+            "id": 3,
+            "name": "High"
+          },
+          "author": {
+            "id": 1,
+            "login": "admin",
+            "mail": "admin@example.net",
+            "firstname": "Redmine",
+            "lastname": "Admin",
+            "identity_url": null,
+            "icon_url": "http:\/\/www.gravatar.com\/avatar\/cb4f282fed12016bd18a879c1f27ff97?rating=PG&size=50"
+          },
+          "assignee": {
+            "id": 5,
+            "login": "demo",
+            "mail": "me@phanan.net",
+            "firstname": "Demo",
+            "lastname": "User",
+            "identity_url": null,
+            "icon_url": "http:\/\/www.gravatar.com\/avatar\/0e5601057dfe4b0fa94611f1fad4fb95?rating=PG&size=50"
+          },
+          "watchers": [
+            {
+              "id": 1,
+              "login": "admin",
+              "mail": "admin@example.net",
+              "firstname": "Redmine",
+              "lastname": "Admin",
+              "identity_url": null,
+              "icon_url": "http:\/\/www.gravatar.com\/avatar\/cb4f282fed12016bd18a879c1f27ff97?rating=PG&size=50"
+            }
+          ]
         },
-        "action": "opened",
-        "url": "https://example.com"
+        "url": "http:\/\/localhost:3000\/issues\/1"
       }
     }
 
@@ -87,89 +99,119 @@ Post Data Example
 
     {
       "payload": {
-        "url": "https://example.com",
-        "journal": {
-          "details": [],
-          "author": {
-            "icon_url": "http://www.gravatar.com/avatar/example",
-            "identity_url": null,
-            "lastname": "user",
-            "firstname": "test",
-            "mail": "test@example.com",
-            "login": "test",
-            "id": 3
-          },
-          "assignee": {
-            "icon_url": "http://www.gravatar.com/avatar/example",
-            "identity_url": null,
-            "lastname": "user",
-            "firstname": "test",
-            "mail": "test@example.com",
-            "login": "test",
-            "id": 3
-          },
-          "private_notes": false,
-          "created_on": "2014-03-01T16:22:46Z",
-          "notes": "Fixed",
-          "id": 195
-        },
+        "action": "updated",
         "issue": {
-          "author": {
-            "icon_url": "http://www.gravatar.com/avatar/example",
-            "identity_url": null,
-            "lastname": "user",
-            "firstname": "test",
-            "mail": "test@example.com",
-            "login": "test",
-            "id": 3
-          },
-          "priority": {
-            "name": "normal",
-            "id": 2
-          },
-          "tracker": {
-            "name": "bug",
-            "id": 1
-          },
-          "parent_id": null,
-          "root_id": 196,
+          "id": 1,
+          "subject": "A sample bug",
+          "description": "Lorem ipsum dolor sic amet.",
+          "created_on": "2015-03-06T04:23:42Z",
+          "updated_on": "2015-03-07T10:00:59Z",
           "closed_on": null,
-          "updated_on": "2014-03-01T16:22:46Z",
-          "created_on": "2014-03-01T15:44:22Z",
-          "description": "test",
-          "subject": "Found a bug",
-          "id": 196,
-          "done_ratio": 0,
-          "start_date": "2014-03-02",
-          "due_date": null,
-          "estimated_hours": null,
+          "root_id": 1,
+          "parent_id": null,
+          "done_ratio": 100,
+          "start_date": "2015-03-02",
+          "due_date": "2015-03-20",
+          "estimated_hours": 15,
           "is_private": false,
-          "lock_version": 2,
+          "lock_version": 14,
           "project": {
-            "homepage": "",
-            "created_on": "2013-01-12T11:50:26Z",
-            "description": "",
-            "name": "Test Project",
-            "identifier": "test",
-            "id": 4
+            "id": 1,
+            "identifier": "playground",
+            "name": "Playground",
+            "description": "A sample playground project",
+            "created_on": "2015-03-06T02:51:48Z",
+            "homepage": ""
           },
           "status": {
-            "name": "normal",
-            "id": 1
-          }
+            "id": 2,
+            "name": "In Progress"
+          },
+          "tracker": {
+            "id": 2,
+            "name": "Feature"
+          },
+          "priority": {
+            "id": 2,
+            "name": "Normal"
+          },
+          "author": {
+            "id": 1,
+            "login": "admin",
+            "mail": "admin@example.net",
+            "firstname": "Redmine",
+            "lastname": "Admin",
+            "identity_url": null,
+            "icon_url": "http:\/\/www.gravatar.com\/avatar\/cb4f282fed12016bd18a879c1f27ff97?rating=PG&size=50"
+          },
+          "assignee": {
+            "id": 5,
+            "login": "demo",
+            "mail": "me@phanan.net",
+            "firstname": "Demo",
+            "lastname": "User",
+            "identity_url": null,
+            "icon_url": "http:\/\/www.gravatar.com\/avatar\/0e5601057dfe4b0fa94611f1fad4fb95?rating=PG&size=50"
+          },
+          "watchers": [
+            {
+              "id": 1,
+              "login": "admin",
+              "mail": "admin@example.net",
+              "firstname": "Redmine",
+              "lastname": "Admin",
+              "identity_url": null,
+              "icon_url": "http:\/\/www.gravatar.com\/avatar\/cb4f282fed12016bd18a879c1f27ff97?rating=PG&size=50"
+            }
+          ]
         },
-        "action": "updated"
+        "journal": {
+          "id": 28,
+          "notes": "",
+          "created_on": "2015-03-07T10:00:59Z",
+          "private_notes": false,
+          "author": {
+            "id": 1,
+            "login": "admin",
+            "mail": "admin@example.net",
+            "firstname": "Redmine",
+            "lastname": "Admin",
+            "identity_url": null,
+            "icon_url": "http:\/\/www.gravatar.com\/avatar\/cb4f282fed12016bd18a879c1f27ff97?rating=PG&size=50"
+          },
+          "details": [
+            {
+              "id": 56,
+              "value": 3,
+              "old_value": 1,
+              "prop_key": "status_id",
+              "property": "attr"
+            },
+            {
+              "id": 57,
+              "value": 3,
+              "old_value": 2,
+              "prop_key": "priority_id",
+              "property": "attr"
+            }
+          ]
+        },
+        "journal_html": [
+          "<strong>Status<\/strong> changed from <i>New<\/i> to <i>Resolved<\/i>",
+          "<strong>Priority<\/strong> changed from <i>Normal<\/i> to <i>High<\/i>"
+        ],
+        "url": "http:\/\/localhost:3000\/issues\/1#change-28"
       }
     }
 
 Requirements
 ------------------------------
-* Redmine 2.4
+* Redmine >= 2.4 (not tested with 3.x)
 
 License
 ------------------------------
 The MIT License (MIT)
-Copyright (c) suer
+Copyright (c) suer, [Phan An](http://phanan.net)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
